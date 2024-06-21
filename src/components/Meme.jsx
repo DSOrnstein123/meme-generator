@@ -1,4 +1,3 @@
-import memesData from "../assets/memes-data.js";
 import React from "react";
 
 function Meme() {
@@ -8,12 +7,25 @@ function Meme() {
     randomImg: "https://i.imgflip.com/30b1gx.jpg",
   });
 
-  const [allMemeImgs, setAllMemeImgs] = React.useState(memesData);
+  const [allMemeImgs, setAllMemeImgs] = React.useState([]);
+
+  React.useEffect(() => {
+    // (*) async method:
+    // async function getMemes() {
+    //   const res = await fetch("https://api.imgflip.com/get_memes");
+    //   const data = await res.json();
+    //   setAllMemes(data.data.memes);
+    // }
+    // getMemes();
+
+    fetch("https://api.imgflip.com/get_memes")
+      .then((res) => res.json())
+      .then((data) => setAllMemeImgs(data.data.memes));
+  }, []);
 
   function getMemeImg() {
-    const memesArray = allMemeImgs.data.memes;
-    const randomNumber = Math.floor(Math.random() * memesArray.length);
-    const { url } = memesArray[randomNumber];
+    const randomNumber = Math.floor(Math.random() * allMemeImgs.length);
+    const { url } = allMemeImgs[randomNumber];
     setMeme((prevMeme) => ({ ...prevMeme, randomImg: url }));
   }
 
